@@ -55,9 +55,8 @@ class WVAE():
         encoder = Model(input, z)
         reconstruction_loss = mse(input, output)
         reconstruction_loss *= original_dim
-        wd_loss=K.square(tf.norm(z_mean))+tf.linalg.trace(K.exp(z_log_var)+tf.eye(batch,dim)+2*tf.sqrt(K.exp(z_log_var)))
+        wd_loss=K.square(tf.norm(z_mean))+tf.linalg.trace(K.exp(z_log_var)+tf.eye(batch,dim)-2*tf.sqrt(K.exp(z_log_var)))
         wd_loss=K.sqrt(wd_loss)
-        wd_loss *= -0.5
         wvae_loss = K.mean(reconstruction_loss + wd_loss)
         wvae.add_loss(wvae_loss)
         wvae.compile(optimizer=Adam())
